@@ -95,12 +95,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final static int MIN_INTERVAL = 1000;
 
     private GoogleMap mMap;
-    DatabaseReference m_groupRef;
+    private static DatabaseReference m_groupRef;
 
     private static DatabaseHelper m_sqLitehelper;
     private static FirebaseDatabase m_FirebaseDatabase;
     private static FirebaseStorage m_FirebaseStorage;
-    private static DatabaseReference m_FishDTORef;
 
     private FrameLayout m_layoutRoot;
     private static GoogleApiClient m_GoogleApiClient;
@@ -143,12 +142,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         m_FirebaseStorage = FirebaseStorage.getInstance();
         FirebaseAuth.getInstance().signInAnonymously();
         m_FirebaseDatabase = FirebaseDatabase.getInstance();
-        m_FishDTORef = m_FirebaseDatabase.getReference("Fish List");
+        m_groupRef = m_FirebaseDatabase.getReference("FishList");
+        m_group = new Group();
         setupListenerDTO();
     }
 
     private void setupListenerDTO() {
-        m_FishDTORef.addListenerForSingleValueEvent(new ValueEventListener() {
+        m_groupRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // todo try catch
@@ -158,12 +158,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 catch (Exception e) {//todo
                     e.printStackTrace();
                 }
-
-                if (group == null) {
-                    Group groupTemp = new Group();
-                    m_FishDTORef.setValue(group);
+                if(group == null){
+                    m_groupRef.setValue(m_group);
                 } else {
-                    m_group  = group;
+                    m_group = group;
                 }
             }
             @Override
@@ -171,7 +169,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-        m_FishDTORef.addValueEventListener(new ValueEventListener() {
+        m_groupRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 try {

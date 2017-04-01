@@ -12,7 +12,7 @@ import com.google.firebase.database.PropertyName;
 
 
 
-
+@IgnoreExtraProperties
 public class FishDTO {
 
     @Exclude
