@@ -58,10 +58,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -74,6 +77,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
         GoogleApiClient.ConnectionCallbacks, com.google.android.gms.location.LocationListener,
         GoogleApiClient.OnConnectionFailedListener {
@@ -85,6 +94,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final static int MIN_INTERVAL = 1000;
 
     private GoogleMap mMap;
+    DatabaseReference m_groupRef;
+
+    private static DatabaseHelper m_sqLitehelper;
+    private static FirebaseDatabase m_FirebaseDatabase;
+    private static FirebaseStorage m_FirebaseStorage;
+    private static StorageReference m_pictures;
 
     private FrameLayout m_layoutRoot;
     private static GoogleApiClient m_GoogleApiClient;
@@ -122,6 +137,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(MAX_INTERVAL)        // 10 seconds, in milliseconds
                 .setFastestInterval(MIN_INTERVAL); // 1 second, in milliseconds
+        m_FirebaseStorage = FirebaseStorage.getInstance();
+        FirebaseAuth.getInstance().signInAnonymously();
+        m_FirebaseDatabase = FirebaseDatabase.getInstance();
+        m_pictures = m_FirebaseStorage.getReference("pictures");
     }
 
     @Override
@@ -288,4 +307,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }*/
     }
+/*
+    public void CreateMarker() {
+        for (User u : m_group.getUsers()) {
+            Location loc = u.getCurrentLocation();
+            Profile p = u.m_profile;
+            if (p != null && loc != null) {
+                // get the local profile whose contain a picture
+                Profile localProfile = ourInstance.getUserProfile(p.m_name);
+                if (localProfile != null) { // get the local user profile which have a picture
+                    p = localProfile;
+                }
+                MarkerOptions marker = new MarkerOptions().position(new LatLng(loc.getLatitude(), loc.getLongitude()))
+                        .title(p.m_name);
+                if (p.m_picture != null) {
+                    marker.icon(BitmapDescriptorFactory.fromBitmap(p.m_picture));
+                }
+                m_Map.addMarker(marker);
+            }
+        }
+    }*/
 }
