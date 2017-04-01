@@ -147,12 +147,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setupListenerDTO() {
+        m_FishDTORef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // todo try catch
+
+                FishDTO group = null;
+                try{group = dataSnapshot.getValue(FishDTO.class);}
+                catch (Exception e) {//todo
+                    e.printStackTrace();
+                }
+
+                if (group == null) {
+                    Manager manager = new Manager(UserSingleton.m_user);
+                    m_group = new Group(manager, groupName);
+                    m_user = manager;
+                    groupRef.setValue(m_group);
+                } else {
+                    m_group  = group;
+                    if ( m_group.m_manager != null && m_group.m_manager.equals(UserSingleton.m_user)) {
+                        // promote user to manager
+                        UserSingleton.m_user =  m_group.m_manager;
+                    }
+                    if (!m_group.m_users.containsKey(UserSingleton.m_user.m_profile.m_name))
+                    {
+                        m_group.add(m_user);
+                        groupRef.child(Group.PROPERTY_USERS).child(UserSingleton.m_user.m_profile.m_name).setValue(m_user);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
         m_FishDTORef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 try {
                     Log.d(TAG, "onDataChange Fired: ============");
-                    final FishDTO fishDTO = dataSnapshot.getValue(FishDTO.class);
+                    //final FishDTO fishDTO = dataSnapsh
                     if(fishDTO != null){
                         // Only get lastest place for new marker. The other ones are supposedly already marked on Gmap
                         mMap.clear();
