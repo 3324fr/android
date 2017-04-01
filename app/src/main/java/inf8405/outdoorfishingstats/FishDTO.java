@@ -14,5 +14,4 @@ public class FishDTO {
     public double longitude;
     public double latitude;
 
-
 }
