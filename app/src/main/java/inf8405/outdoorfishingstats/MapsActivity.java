@@ -2,6 +2,7 @@ package inf8405.outdoorfishingstats;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -99,12 +100,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static DatabaseHelper m_sqLitehelper;
     private static FirebaseDatabase m_FirebaseDatabase;
     private static FirebaseStorage m_FirebaseStorage;
-    private static StorageReference m_pictures;
+    private static DatabaseReference m_FishDTORef;
 
     private FrameLayout m_layoutRoot;
     private static GoogleApiClient m_GoogleApiClient;
 
     private LocationRequest m_LocationRequest;
+    private FishDTO m_Fishes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +142,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         m_FirebaseStorage = FirebaseStorage.getInstance();
         FirebaseAuth.getInstance().signInAnonymously();
         m_FirebaseDatabase = FirebaseDatabase.getInstance();
-        m_pictures = m_FirebaseStorage.getReference("pictures");
+        m_FishDTORef = m_FirebaseDatabase.getReference("Fish List");
+        setupListenerDTO();
+    }
+
+    private void setupListenerDTO() {
+        m_FishDTORef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    Log.d(TAG, "onDataChange Fired: ============");
+                    final FishDTO fishDTO = dataSnapshot.getValue(FishDTO.class);
+                    if(fishDTO != null){
+                        // Only get lastest place for new marker. The other ones are supposedly already marked on Gmap
+                        mMap.clear();
+                        // create markers for users, places and event
+                        CreateMarker();
+                    }
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                System.out.println("The read read failed: " + databaseError.getCode() + "============");
+            }
+        });
     }
 
     @Override
@@ -307,9 +337,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }*/
     }
-/*
+
     public void CreateMarker() {
-        for (User u : m_group.getUsers()) {
+
+        /*for (User u : m_Fishes) {
             Location loc = u.getCurrentLocation();
             Profile p = u.m_profile;
             if (p != null && loc != null) {
@@ -325,6 +356,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 m_Map.addMarker(marker);
             }
-        }
-    }*/
+        }*/
+    }
 }
