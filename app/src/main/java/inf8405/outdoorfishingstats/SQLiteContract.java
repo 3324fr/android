@@ -33,13 +33,12 @@ public final class SQLiteContract {
             "CREATE TABLE " + FishingEntry.TABLE_NAME + " (" +
                     FishingEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     FishingEntry.COLUMN_NAME_COMMENT + " TEXT NOT NULL," +
-                    FishingEntry.COLUMN_NAME_NAME + " TEXT NOT NULL," +
-                    FishingEntry.COLUMN_NAME_MAG + " TEXT NOT NULL," +
-                    FishingEntry.COLUMN_NAME_TEMPERATURE + " TEXT NOT NULL," +
-                    FishingEntry.COLUMN_NAME_PRESSURE + " TEXT NOT NULL," +
-                    FishingEntry.COLUMN_NAME_LAT + " TEXT NOT NULL," +
-                    FishingEntry.COLUMN_NAME_COMMENT + " TEXT NOT NULL," +
-                    FishingEntry.COLUMN_NAME_LNG + " TEXT NOT NULL) ";
+                    FishingEntry.COLUMN_NAME_NAME + " TEXT," +
+                    FishingEntry.COLUMN_NAME_MAG + " TEXT," +
+                    FishingEntry.COLUMN_NAME_TEMPERATURE + " INTEGER NOT NULL," +
+                    FishingEntry.COLUMN_NAME_PRESSURE + " INTEGER NOT NULL," +
+                    FishingEntry.COLUMN_NAME_LAT + " REAL NOT NULL," +
+                    FishingEntry.COLUMN_NAME_LNG + " REAL NOT NULL) ";
 
 
 
