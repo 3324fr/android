@@ -10,7 +10,7 @@ public class FishEntry {
     public String name;
     public int temperature;
     public float latitude;
-    public float longintude;
+    public float longitude;
     public int pressure;
     public String time;
 

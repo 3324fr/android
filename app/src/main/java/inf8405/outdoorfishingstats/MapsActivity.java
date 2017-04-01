@@ -2,6 +2,7 @@ package inf8405.outdoorfishingstats;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -58,10 +59,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -74,6 +78,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
         GoogleApiClient.ConnectionCallbacks, com.google.android.gms.location.LocationListener,
         GoogleApiClient.OnConnectionFailedListener {
@@ -85,11 +95,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final static int MIN_INTERVAL = 1000;
 
     private GoogleMap mMap;
+    private static DatabaseReference m_groupRef;
+
+    private static DatabaseHelper m_sqLitehelper;
+    private static FirebaseDatabase m_FirebaseDatabase;
+    private static FirebaseStorage m_FirebaseStorage;
 
     private FrameLayout m_layoutRoot;
     private static GoogleApiClient m_GoogleApiClient;
+    private Group m_group;
 
     private LocationRequest m_LocationRequest;
+    private FishDTO m_Fishes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +139,60 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(MAX_INTERVAL)        // 10 seconds, in milliseconds
                 .setFastestInterval(MIN_INTERVAL); // 1 second, in milliseconds
+        m_FirebaseStorage = FirebaseStorage.getInstance();
+        FirebaseAuth.getInstance().signInAnonymously();
+        m_FirebaseDatabase = FirebaseDatabase.getInstance();
+        m_groupRef = m_FirebaseDatabase.getReference("FishList");
+        m_group = new Group();
+        setupListenerDTO();
+    }
+
+    private void setupListenerDTO() {
+        m_groupRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // todo try catch
+
+                Group group = null;
+                try{group = dataSnapshot.getValue(Group.class);}
+                catch (Exception e) {//todo
+                    e.printStackTrace();
+                }
+                if(group == null){
+                    m_groupRef.setValue(m_group);
+                } else {
+                    m_group = group;
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+        m_groupRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    Log.d(TAG, "onDataChange Fired: ============");
+                    final Group group = dataSnapshot.getValue(Group.class);
+                    if(group != null){
+                        // Only get lastest place for new marker. The other ones are supposedly already marked on Gmap
+                        mMap.clear();
+                        // create markers for users, places and event
+                        CreateMarker();
+                    }
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                System.out.println("The read read failed: " + databaseError.getCode() + "============");
+            }
+        });
     }
 
     @Override
@@ -285,6 +356,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //CameraUpdate zoom = CameraUpdateFactory.zoomTo(12);
                 m_Map.moveCamera(center);
                 //m_Map.animateCamera(zoom);
+            }
+        }*/
+    }
+
+    public void CreateMarker() {
+
+        /*for (User u : m_Fishes) {
+            Location loc = u.getCurrentLocation();
+            Profile p = u.m_profile;
+            if (p != null && loc != null) {
+                // get the local profile whose contain a picture
+                Profile localProfile = ourInstance.getUserProfile(p.m_name);
+                if (localProfile != null) { // get the local user profile which have a picture
+                    p = localProfile;
+                }
+                MarkerOptions marker = new MarkerOptions().position(new LatLng(loc.getLatitude(), loc.getLongitude()))
+                        .title(p.m_name);
+                if (p.m_picture != null) {
+                    marker.icon(BitmapDescriptorFactory.fromBitmap(p.m_picture));
+                }
+                m_Map.addMarker(marker);
             }
         }*/
     }
