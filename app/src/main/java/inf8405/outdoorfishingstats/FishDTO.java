@@ -33,5 +33,7 @@ public class FishDTO {
     @PropertyName(PROPERTY_LATITUDE)
     public double latitude;
 
-
+    public FishDTO(){
+        this.name = "test";
+    }
 }

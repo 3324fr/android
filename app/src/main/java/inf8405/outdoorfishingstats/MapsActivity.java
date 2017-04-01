@@ -84,6 +84,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
         GoogleApiClient.ConnectionCallbacks, com.google.android.gms.location.LocationListener,
         GoogleApiClient.OnConnectionFailedListener {
@@ -106,7 +110,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Group m_group;
 
     private LocationRequest m_LocationRequest;
-    private FishDTO m_Fishes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +148,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         m_groupRef = m_FirebaseDatabase.getReference("FishList");
         m_group = new Group();
         setupListenerDTO();
+
+    }
+
+    private void setupOnMarkerListener() {
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            // Use default InfoWindow frame
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+            // SOURCE: http://stackoverflow.com/questions/15090148/custom-info-window-adapter-with-custom-data-in-map-v2
+            // Defines the contents of the InfoWindow
+            // prepare the special snipet marker for the chosen event place
+            @Override
+            public View getInfoContents(Marker arg0) {
+                // Getting view from the layout file info_window_layout
+                /*View v = getLayoutInflater().inflate(R.layout.custom_infowind, null);
+                ((TextView) v.findViewById(R.id.tv_title)).setText(m_group.m_meeting.m_place.m_name);
+                ((TextView) v.findViewById(R.id.tv_lat)).setText("Lat:" + m_group.m_meeting.m_place.m_loc.getLatitude());
+                ((TextView) v.findViewById(R.id.tv_lng)).setText("Long:" + m_group.m_meeting.m_place.m_loc.getLongitude());
+                ((TextView) v.findViewById(R.id.tv_date)).setText("Date:" + m_group.m_meeting.m_date+ "\t|");
+                ((TextView) v.findViewById(R.id.tv_start)).setText("Start Time:" + m_group.m_meeting.m_startTime+ "\t|");
+                ((TextView) v.findViewById(R.id.tv_end)).setText("End Time:" + m_group.m_meeting.m_endTime);
+                ((TextView) v.findViewById(R.id.tv_info)).setText("Infos:" + m_group.m_meeting.m_info);
+                ((TextView) v.findViewById(R.id.tv_participants)).setText("Go:" + getStringFromArray(m_group.m_meeting.m_participants) + "\t|");
+                ((TextView) v.findViewById(R.id.tv_maybe)).setText("Maybe:" + getStringFromArray(m_group.m_meeting.m_maybe) + "\t|");
+                ((TextView) v.findViewById(R.id.tv_decline)).setText("Declined:" + getStringFromArray(m_group.m_meeting.m_decline));*/
+                //return v;
+                return null;
+            }
+        });
     }
 
     private void setupListenerDTO() {
@@ -221,6 +255,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setDataBaseMap();
         // attempt to move camera to user if ready
         moveCameraInit();
+        setupOnMarkerListener();
     }
 
     @Override
@@ -361,23 +396,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void CreateMarker() {
-
-        /*for (User u : m_Fishes) {
-            Location loc = u.getCurrentLocation();
-            Profile p = u.m_profile;
-            if (p != null && loc != null) {
-                // get the local profile whose contain a picture
-                Profile localProfile = ourInstance.getUserProfile(p.m_name);
-                if (localProfile != null) { // get the local user profile which have a picture
-                    p = localProfile;
-                }
-                MarkerOptions marker = new MarkerOptions().position(new LatLng(loc.getLatitude(), loc.getLongitude()))
-                        .title(p.m_name);
-                if (p.m_picture != null) {
-                    marker.icon(BitmapDescriptorFactory.fromBitmap(p.m_picture));
-                }
-                m_Map.addMarker(marker);
+        for(Map.Entry<String, FishDTO> entry : m_group.m_fishes.entrySet()) {
+            String key = entry.getKey();
+            FishDTO fish = entry.getValue();
+            // do what you have to do here
+            // In your case, an other loop.
+            Double latitude = fish.latitude;
+            Double longitude = fish.longitude;
+            if (fish != null && longitude != null) {
+                MarkerOptions marker = new MarkerOptions().position(new LatLng(latitude, longitude))
+                        .title(key);
+                mMap.addMarker(marker);
             }
-        }*/
+        }
     }
 }
