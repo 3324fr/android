@@ -104,6 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private FrameLayout m_layoutRoot;
     private static GoogleApiClient m_GoogleApiClient;
+    private Group m_group;
 
     private LocationRequest m_LocationRequest;
     private FishDTO m_Fishes;
@@ -152,28 +153,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // todo try catch
 
-                FishDTO group = null;
-                try{group = dataSnapshot.getValue(FishDTO.class);}
+                Group group = null;
+                try{group = dataSnapshot.getValue(Group.class);}
                 catch (Exception e) {//todo
                     e.printStackTrace();
                 }
 
                 if (group == null) {
-                    Manager manager = new Manager(UserSingleton.m_user);
-                    m_group = new Group(manager, groupName);
-                    m_user = manager;
-                    groupRef.setValue(m_group);
+                    Group groupTemp = new Group();
+                    m_FishDTORef.setValue(group);
                 } else {
                     m_group  = group;
-                    if ( m_group.m_manager != null && m_group.m_manager.equals(UserSingleton.m_user)) {
-                        // promote user to manager
-                        UserSingleton.m_user =  m_group.m_manager;
-                    }
-                    if (!m_group.m_users.containsKey(UserSingleton.m_user.m_profile.m_name))
-                    {
-                        m_group.add(m_user);
-                        groupRef.child(Group.PROPERTY_USERS).child(UserSingleton.m_user.m_profile.m_name).setValue(m_user);
-                    }
                 }
             }
             @Override
@@ -186,8 +176,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onDataChange(DataSnapshot dataSnapshot) {
                 try {
                     Log.d(TAG, "onDataChange Fired: ============");
-                    //final FishDTO fishDTO = dataSnapsh
-                    if(fishDTO != null){
+                    final Group group = dataSnapshot.getValue(Group.class);
+                    if(group != null){
                         // Only get lastest place for new marker. The other ones are supposedly already marked on Gmap
                         mMap.clear();
                         // create markers for users, places and event
