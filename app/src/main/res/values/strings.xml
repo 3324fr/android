@@ -14,9 +14,8 @@
     </string>
 
     <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
+    <string name="pref_default_display_name">Default Fisher</string>
 
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
     <string-array name="pref_example_list_titles">
         <item>Always</item>
         <item>When possible</item>
@@ -165,6 +164,10 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+
+    <string name="fish_picture">fish picture</string>
+
     <string name="permgranted">Permission granted</string>
     <string name="permdenied">Permission denied</string>
+
 </resources>
