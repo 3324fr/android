@@ -148,7 +148,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         m_groupRef = m_FirebaseDatabase.getReference("FishList");
         m_group = new Group();
         setupListenerDTO();
-
     }
 
     private void setupOnMarkerListener() {
@@ -163,19 +162,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // prepare the special snipet marker for the chosen event place
             @Override
             public View getInfoContents(Marker arg0) {
-                // Getting view from the layout file info_window_layout
-                /*View v = getLayoutInflater().inflate(R.layout.custom_infowind, null);
-                ((TextView) v.findViewById(R.id.tv_title)).setText(m_group.m_meeting.m_place.m_name);
-                ((TextView) v.findViewById(R.id.tv_lat)).setText("Lat:" + m_group.m_meeting.m_place.m_loc.getLatitude());
-                ((TextView) v.findViewById(R.id.tv_lng)).setText("Long:" + m_group.m_meeting.m_place.m_loc.getLongitude());
-                ((TextView) v.findViewById(R.id.tv_date)).setText("Date:" + m_group.m_meeting.m_date+ "\t|");
-                ((TextView) v.findViewById(R.id.tv_start)).setText("Start Time:" + m_group.m_meeting.m_startTime+ "\t|");
-                ((TextView) v.findViewById(R.id.tv_end)).setText("End Time:" + m_group.m_meeting.m_endTime);
-                ((TextView) v.findViewById(R.id.tv_info)).setText("Infos:" + m_group.m_meeting.m_info);
-                ((TextView) v.findViewById(R.id.tv_participants)).setText("Go:" + getStringFromArray(m_group.m_meeting.m_participants) + "\t|");
-                ((TextView) v.findViewById(R.id.tv_maybe)).setText("Maybe:" + getStringFromArray(m_group.m_meeting.m_maybe) + "\t|");
-                ((TextView) v.findViewById(R.id.tv_decline)).setText("Declined:" + getStringFromArray(m_group.m_meeting.m_decline));*/
-                //return v;
+                for(Map.Entry<String, FishDTO> entry : m_group.m_fishes.entrySet()) {
+                    if(entry.getKey().equals(arg0.getTitle())){
+                        FishDTO fish = entry.getValue();
+                        // Getting view from the layout file info_window_layout
+                        View v = getLayoutInflater().inflate(R.layout.custom_infowind, null);
+                        ((TextView) v.findViewById(R.id.tv_title)).setText(fish.name);
+                        ((TextView) v.findViewById(R.id.tv_lat)).setText("Lat:" + fish.latitude);
+                        ((TextView) v.findViewById(R.id.tv_lng)).setText("Long:" + fish.longitude);
+                        ((TextView) v.findViewById(R.id.tv_date)).setText("Date:" + fish.time);
+                        ((TextView) v.findViewById(R.id.tv_info)).setText("Contacts:" + fish.contact);
+                        return v;
+                    }
+                }
                 return null;
             }
         });
@@ -260,6 +259,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
+        FishDTO fish = new FishDTO();
+
+        m_group.add(fish);
+        m_groupRef.setValue(m_group);
+        //groupRef.setValue(loc);
     }
 
 
@@ -296,7 +300,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-
+        String fishName = marker.getTitle();
     }
 
     @Override
@@ -396,6 +400,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void CreateMarker() {
+        mMap.clear();
         for(Map.Entry<String, FishDTO> entry : m_group.m_fishes.entrySet()) {
             String key = entry.getKey();
             FishDTO fish = entry.getValue();
@@ -404,8 +409,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Double latitude = fish.latitude;
             Double longitude = fish.longitude;
             if (fish != null && longitude != null) {
+
                 MarkerOptions marker = new MarkerOptions().position(new LatLng(latitude, longitude))
-                        .title(key);
+                        .title(key).snippet("Contact: " + fish.contact + " Time: " + fish.time);
                 mMap.addMarker(marker);
             }
         }

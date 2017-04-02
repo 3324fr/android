@@ -25,6 +25,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.Date;
 
@@ -39,6 +46,12 @@ public class FishActivity extends AppCompatActivity{
     public FishDTO m_fishDTO;
     public Location m_lastLocation;
     public Date m_currentDateTime;
+    private static DatabaseReference m_groupRef;
+
+    private static DatabaseHelper m_sqLitehelper;
+    private static FirebaseDatabase m_FirebaseDatabase;
+    private static FirebaseStorage m_FirebaseStorage;
+    private Group m_group;
     //public LocationManager m_locationManager;
 
     //private SensorManager m_SensorManager;
@@ -50,6 +63,7 @@ public class FishActivity extends AppCompatActivity{
 
         //m_locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         //m_SensorManager =  (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        setupFirebase();
     }
 
     public void takePicture(View view) {
@@ -109,13 +123,52 @@ public class FishActivity extends AppCompatActivity{
             if(!contactText.isEmpty() && !contactText.matches("^-?\\d+$")) {
                 fishDTO.contact = contactText;
             }
+            m_currentDateTime = m_currentDateTime == null ?  new Date(System.currentTimeMillis()) : m_currentDateTime;
             fishDTO.time = m_currentDateTime.toString();
-            fishDTO.longitude = m_lastLocation.getLongitude();
-            fishDTO.latitude = m_lastLocation.getLatitude();
+            fishDTO.longitude = m_lastLocation == null ?  0 : m_lastLocation.getLongitude();
+            fishDTO.latitude = m_lastLocation  == null ?  0 : m_lastLocation.getLatitude();
 
             //todo FIREBASE
+            addFishToFirebase(fishDTO);
             //todo SQLITE
         }
+    }
+
+    private void addFishToFirebase(FishDTO fishDTO) {
+        m_groupRef.child(fishDTO.name).setValue(fishDTO);
+    }
+
+    private void setupFirebase(){
+        m_FirebaseStorage = FirebaseStorage.getInstance();
+        FirebaseAuth.getInstance().signInAnonymously();
+        m_FirebaseDatabase = FirebaseDatabase.getInstance();
+        m_groupRef = m_FirebaseDatabase.getReference("FishList");
+        m_group = new Group();
+        setupListenerDTO();
+    }
+
+    private void setupListenerDTO() {
+        m_groupRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // todo try catch
+
+                Group group = null;
+                try{group = dataSnapshot.getValue(Group.class);}
+                catch (Exception e) {//todo
+                    e.printStackTrace();
+                }
+                if(group == null){
+                    m_groupRef.setValue(m_group);
+                } else {
+                    m_group = group;
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
     }
 
     //SOURCE: http://android-er.blogspot.ca/2016/04/requesting-permissions-of.html

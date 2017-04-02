@@ -6,6 +6,10 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.PropertyName;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by Sly on 4/1/2017.
  */
@@ -35,5 +39,12 @@ public class FishDTO {
 
     public FishDTO(){
         this.name = "test";
+        this.contact = "davidG@gmail.com";
+        this.latitude = 70;
+        this.longitude = -41;
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = df.format(c.getTime());
+        this.time = formattedDate;
     }
 }
