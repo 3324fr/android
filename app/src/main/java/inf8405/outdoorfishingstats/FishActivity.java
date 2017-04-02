@@ -46,6 +46,7 @@ public class FishActivity extends AppCompatActivity{
     public FishDTO m_fishDTO;
     public Location m_lastLocation;
     public Date m_currentDateTime;
+    public Bitmap m_fishPicture;
     private static DatabaseReference m_groupRef;
 
     private static DatabaseHelper m_sqLitehelper;
@@ -78,7 +79,7 @@ public class FishActivity extends AppCompatActivity{
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            m_fishPicture = (Bitmap) extras.get("data");
 
             m_currentDateTime  = new Date(System.currentTimeMillis());
 
@@ -96,7 +97,7 @@ public class FishActivity extends AppCompatActivity{
             }
 
             //SensorData sensorData = new SensorData(m_SensorManager ,this);
-            picture(imageBitmap);
+            picture(m_fishPicture);
         }
     }//onActivityResult
 
@@ -113,6 +114,11 @@ public class FishActivity extends AppCompatActivity{
             Toast.makeText(this, getString(R.string.name_missing), Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if(m_fishPicture == null){
+            Toast.makeText(this, getString(R.string.picture_missing), Toast.LENGTH_SHORT).show();
+        }
+
         else{
             FishDTO fishDTO = new FishDTO();
             fishDTO.name = nameText;
@@ -125,18 +131,18 @@ public class FishActivity extends AppCompatActivity{
             }
             m_currentDateTime = m_currentDateTime == null ?  new Date(System.currentTimeMillis()) : m_currentDateTime;
             fishDTO.time = m_currentDateTime.toString();
+
             fishDTO.longitude = m_lastLocation == null ?  0 : m_lastLocation.getLongitude();
             fishDTO.latitude = m_lastLocation  == null ?  0 : m_lastLocation.getLatitude();
 
-            //todo FIREBASE
-            addFishToFirebase(fishDTO);
+            //Add fish to firebase
+            m_groupRef.child(fishDTO.name).setValue(fishDTO);
+
+
             //todo SQLITE
         }
     }
 
-    private void addFishToFirebase(FishDTO fishDTO) {
-        m_groupRef.child(fishDTO.name).setValue(fishDTO);
-    }
 
     private void setupFirebase(){
         m_FirebaseStorage = FirebaseStorage.getInstance();

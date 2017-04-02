@@ -174,7 +174,8 @@
     <string name="name">Name</string>
     <string name="contact">Contact</string>
 
-    <string name="name_missing">Please enter a nameM</string>
+    <string name="name_missing">Please enter a name</string>
+    <string name="picture_missing">Please take a picture</string>
 
 
 </resources>
