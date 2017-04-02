@@ -39,13 +39,6 @@
             android:onClick="fish"
             android:text="FISH" />
 
-        <ImageView
-            android:id="@+id/fish_picture"
-            android:layout_width="202dp"
-            android:layout_height="240dp"
-            android:contentDescription="@string/fish_picture"
-            app:srcCompat="@drawable/fish" />
-
 
     </LinearLayout>
 

@@ -13,5 +13,6 @@ public class FishEntry {
     public float longitude;
     public int pressure;
     public String time;
+
 }
 
