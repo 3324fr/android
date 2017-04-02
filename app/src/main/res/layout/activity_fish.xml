@@ -15,7 +15,7 @@
             android:id="@+id/btnTakePicture"
             android:layout_width="270dp"
             android:layout_height="wrap_content"
-            android:onClick="takePicture"
+            android:onClick="OnClickTakePicture"
             android:text="Take picture" />
 
         <ImageView

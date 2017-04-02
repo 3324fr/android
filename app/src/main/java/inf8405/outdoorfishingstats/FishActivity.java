@@ -2,6 +2,7 @@ package inf8405.outdoorfishingstats;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.hardware.SensorManager;
@@ -9,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -43,6 +45,11 @@ public class FishActivity extends AppCompatActivity{
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private final static int MY_LOCATION_REQUEST_CODE = 1;
+    public static final String PREFS_NAME = "pref_general";
+    public static final String PREFS_KEY = "displayName";
+
+    public String m_displayName;
+
     public FishDTO m_fishDTO;
     public Location m_lastLocation;
     public Date m_currentDateTime;
@@ -65,9 +72,15 @@ public class FishActivity extends AppCompatActivity{
         //m_locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         //m_SensorManager =  (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         setupFirebase();
+
+        m_displayName = getDisplayNamePreference(getApplicationContext());
     }
 
-    public void takePicture(View view) {
+    public void OnClickTakePicture(View view) {
+        takePicture();
+    }
+
+    public void takePicture(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -138,9 +151,15 @@ public class FishActivity extends AppCompatActivity{
             //Add fish to firebase
             m_groupRef.child(fishDTO.name).setValue(fishDTO);
 
+            //todo Firebase Picture with m_displayName
 
             //todo SQLITE
         }
+    }
+
+    private String getDisplayNamePreference(Context context){
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        return pref.getString(PREFS_KEY, getResources().getString(R.string.pref_default_display_name));
     }
 
 

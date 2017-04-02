@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
 
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void scrolling(View view){
-        Intent intent = new Intent(this, ScrollingActivity.class);
+        Intent intent = new Intent(this, GalleryActivity.class);
         startActivity(intent);
     }
 
