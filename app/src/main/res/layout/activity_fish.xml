@@ -16,7 +16,7 @@
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:onClick="takePicture"
-            android:text="Take picture" />
+            android:text="@string/take_picture" />
 
         <ImageView
             android:id="@+id/fish_picture"
@@ -74,7 +74,7 @@
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:onClick="addFish"
-            android:text="Confirm" />
+            android:text="@string/confirm" />
 
 
     </LinearLayout>

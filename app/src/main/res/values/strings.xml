@@ -185,6 +185,8 @@
     <string name="fish_prompt">Choose a fish</string>
     <string name="choose_the_fish_category_name">Choose the fish category name</string>
     <string name="naTV">Type of fish: N/A. PM the contact and use NFC</string>
+    <string name="confirm">Confirm</string>
+    <string name="take_picture">Take picture</string>
 
 
     <string-array name="fish_arrays">
