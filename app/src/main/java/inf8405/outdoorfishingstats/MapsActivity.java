@@ -172,6 +172,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         ((TextView) v.findViewById(R.id.tv_lng)).setText("Long:" + fish.longitude);
                         ((TextView) v.findViewById(R.id.tv_date)).setText("Date:" + fish.time);
                         ((TextView) v.findViewById(R.id.tv_info)).setText("Contacts:" + fish.contact);
+                        ((TextView) v.findViewById(R.id.tv_fish)).setText(R.string.naTV);
                         return v;
                     }
                 }

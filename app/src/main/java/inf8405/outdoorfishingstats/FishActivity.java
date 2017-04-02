@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,6 +110,8 @@ public class FishActivity extends AppCompatActivity{
         EditText editText_name = ((EditText) findViewById(R.id.fish_name));
         String nameText = editText_name.getText().toString();
 
+        Spinner spinner = ((Spinner) findViewById(R.id.fish_category));
+        String spinnerName = String.valueOf(spinner.getSelectedItem());
         if(nameText.isEmpty()) {
             Toast.makeText(this, getString(R.string.name_missing), Toast.LENGTH_SHORT).show();
             return;
@@ -116,6 +119,7 @@ public class FishActivity extends AppCompatActivity{
         else{
             FishDTO fishDTO = new FishDTO();
             fishDTO.name = nameText;
+            fishDTO.fish = spinnerName.toString();
 
             EditText editText_contact = ((EditText) findViewById(R.id.fish_name));
             String contactText = editText_contact.getText().toString();

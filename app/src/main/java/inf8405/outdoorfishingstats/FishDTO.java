@@ -25,6 +25,7 @@ public class FishDTO {
     final static String PROPERTY_NAME = "name";
     final static String PROPERTY_CONTACT = "contact";
     final static String PROPERTY_TIME = "time";
+    final static String PROPERTY_FISH = "fish";
 
     @PropertyName(PROPERTY_NAME)
     public String name;
@@ -36,6 +37,8 @@ public class FishDTO {
     public double longitude;
     @PropertyName(PROPERTY_LATITUDE)
     public double latitude;
+    @PropertyName(PROPERTY_FISH)
+    public String fish;
 
     public FishDTO(){
         this.name = "test";
@@ -46,5 +49,6 @@ public class FishDTO {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String formattedDate = df.format(c.getTime());
         this.time = formattedDate;
+        this.fish = "fish";
     }
 }
