@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ public class FishActivity extends AppCompatActivity{
     private final static int MY_LOCATION_REQUEST_CODE = 1;
     public FishDTO m_fishDTO;
     public Location m_lastLocation;
+    public Date m_currentDateTime;
     //public LocationManager m_locationManager;
 
     //private SensorManager m_SensorManager;
@@ -50,7 +52,7 @@ public class FishActivity extends AppCompatActivity{
         //m_SensorManager =  (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     }
 
-    public void addFish(View view) {
+    public void takePicture(View view) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -64,30 +66,22 @@ public class FishActivity extends AppCompatActivity{
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
 
-            //todo do something with imageBitmap (FB + SQLite)
-
-            m_fishDTO = new FishDTO();
-
-            Date currentDate  = new Date(System.currentTimeMillis());
+            m_currentDateTime  = new Date(System.currentTimeMillis());
 
             final TextView fishTime = (TextView) findViewById(R.id.fish_time);
-            fishTime.setText(currentDate.toString());
+            fishTime.setText(m_currentDateTime.toString());
 
             final TextView fishLocation = (TextView) findViewById(R.id.fish_location);
-
-            String locationProvider = LocationManager.GPS_PROVIDER;
 
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 // Acquire a reference to the system Location Manager
                 LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-                // todo check GPS provider
-                Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
+                m_lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                fishLocation.setText("Lon: "+m_lastLocation.getLongitude() + ", Lat: " + m_lastLocation.getLatitude());
             }
-            //SensorData sensorData = new SensorData(m_SensorManager ,this);
 
+            //SensorData sensorData = new SensorData(m_SensorManager ,this);
             picture(imageBitmap);
         }
     }//onActivityResult
@@ -95,6 +89,33 @@ public class FishActivity extends AppCompatActivity{
     private void picture(Bitmap picture) {//Display picture
         ImageView mImageView = (ImageView) findViewById(R.id.fish_picture);
         mImageView.setImageBitmap(picture);
+    }
+
+    public void addFish(View view){
+        EditText editText_name = ((EditText) findViewById(R.id.fish_name));
+        String nameText = editText_name.getText().toString();
+
+        if(nameText.isEmpty()) {
+            Toast.makeText(this, getString(R.string.name_missing), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else{
+            FishDTO fishDTO = new FishDTO();
+            fishDTO.name = nameText;
+
+            EditText editText_contact = ((EditText) findViewById(R.id.fish_name));
+            String contactText = editText_contact.getText().toString();
+
+            if(!contactText.isEmpty() && !contactText.matches("^-?\\d+$")) {
+                fishDTO.contact = contactText;
+            }
+            fishDTO.time = m_currentDateTime.toString();
+            fishDTO.longitude = m_lastLocation.getLongitude();
+            fishDTO.latitude = m_lastLocation.getLatitude();
+
+            //todo FIREBASE
+            //todo SQLITE
+        }
     }
 
     //SOURCE: http://android-er.blogspot.ca/2016/04/requesting-permissions-of.html
