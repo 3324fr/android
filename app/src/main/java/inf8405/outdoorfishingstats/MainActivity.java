@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void scrolling(View view){
-        Intent intent = new Intent(this, ScrollingActivity.class);
+        Intent intent = new Intent(this, GalleryActivity.class);
         startActivity(intent);
     }
 
