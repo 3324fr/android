@@ -24,6 +24,7 @@ public final class SQLiteContract {
         public static final String COLUMN_NAME_PRESSURE = "pressure";
         public static final String COLUMN_NAME_LAT = "lattitude";
         public static final String COLUMN_NAME_LNG = "longitude";
+        public static final String COLUMN_NAME_TIME = "time";
     }
 
 
@@ -35,6 +36,7 @@ public final class SQLiteContract {
                     FishingEntry.COLUMN_NAME_COMMENT + " TEXT NOT NULL," +
                     FishingEntry.COLUMN_NAME_NAME + " TEXT," +
                     FishingEntry.COLUMN_NAME_MAG + " TEXT," +
+                    FishingEntry.COLUMN_NAME_TIME + " TEXT," +
                     FishingEntry.COLUMN_NAME_TEMPERATURE + " INTEGER NOT NULL," +
                     FishingEntry.COLUMN_NAME_PRESSURE + " INTEGER NOT NULL," +
                     FishingEntry.COLUMN_NAME_LAT + " REAL NOT NULL," +

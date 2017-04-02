@@ -1,9 +1,11 @@
 package inf8405.outdoorfishingstats;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.hardware.SensorManager;
 import android.location.Location;
@@ -32,10 +34,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Date;
 
 /**
@@ -60,6 +65,7 @@ public class FishActivity extends AppCompatActivity{
     private static DatabaseHelper m_sqLitehelper;
     private static FirebaseDatabase m_FirebaseDatabase;
     private static FirebaseStorage m_FirebaseStorage;
+    private static StorageReference m_UserPictureRef;
     private Group m_group;
     //public LocationManager m_locationManager;
 
@@ -69,12 +75,12 @@ public class FishActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fish);
-
         //m_locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         //m_SensorManager =  (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        setupFirebase();
-
         m_displayName = getDisplayNamePreference(getApplicationContext());
+
+        setupFirebase();
+        m_sqLitehelper = new DatabaseHelper(this);
     }
 
     public void OnClickTakePicture(View view) {
@@ -152,13 +158,22 @@ public class FishActivity extends AppCompatActivity{
             fishDTO.longitude = m_lastLocation == null ?  0 : m_lastLocation.getLongitude();
             fishDTO.latitude = m_lastLocation  == null ?  0 : m_lastLocation.getLatitude();
 
-            //Add fish to firebase
+            //Add fish to firebase & Picture with m_displayName
             m_groupRef.child(fishDTO.name).setValue(fishDTO);
+            m_UserPictureRef.child(fishDTO.name).putBytes(convertBitmap2Array(m_fishPicture));
+            //todo SQLITE VERIFY
+            SQLiteDatabase db_write = m_sqLitehelper.getWritableDatabase();
+            saveToSQL(db_write, fishDTO);
 
-            //todo Firebase Picture with m_displayName
-
-            //todo SQLITE
+            Intent i = new Intent(FishActivity.this, MainActivity.class);
+            startActivity(i);
         }
+    }
+
+    private byte[] convertBitmap2Array(Bitmap img){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        img.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 
     private String getDisplayNamePreference(Context context){
@@ -172,6 +187,7 @@ public class FishActivity extends AppCompatActivity{
         FirebaseAuth.getInstance().signInAnonymously();
         m_FirebaseDatabase = FirebaseDatabase.getInstance();
         m_groupRef = m_FirebaseDatabase.getReference("FishList");
+        m_UserPictureRef = m_FirebaseStorage.getReference(m_displayName);
         m_group = new Group();
         setupListenerDTO();
     }
@@ -198,6 +214,28 @@ public class FishActivity extends AppCompatActivity{
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
+    }
+
+    @Exclude
+    public void saveToSQL(SQLiteDatabase db , FishDTO fish) {
+        // Create insert entries
+        ContentValues values = new ContentValues();
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_NAME, m_displayName);
+
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_LAT, fish.latitude);
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_LNG, fish.longitude);
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_TIME, fish.time);
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_COMMENT, fish.contact);
+
+        // TODO GET TEMPERATURE AND PRESSURE AND MAG FIELD
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_TEMPERATURE, 0);
+        // TODO GET TEMPERATURE AND PRESSURE AND MAG FIELD
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_PRESSURE, 0);
+        // TODO GET TEMPERATURE AND PRESSURE AND MAG FIELD
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_MAG, 0);
+
+        //values.put(SQLiteContract.FishingEntry.COLUMN_NAME_PICTURE, bytesPicture);
+        db.insert(SQLiteContract.FishingEntry.TABLE_NAME, null, values);
     }
 
     //SOURCE: http://android-er.blogspot.ca/2016/04/requesting-permissions-of.html
