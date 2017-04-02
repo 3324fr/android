@@ -21,24 +21,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void setting(View view){
+    public void OnClickSetting(View view){
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
-    public void map(View view){
+    public void OnClickMap(View view){
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 
-    public void scrolling(View view){
+    public void OnClickScrolling(View view){
         Intent intent = new Intent(this, GalleryActivity.class);
         startActivity(intent);
     }
 
-    public void fish(View view) {
+    public void OnClickFish(View view) {
         Intent intent = new Intent(this, FishActivity.class);
         startActivity(intent);
     }
 
+    public void OnClickStats(View v){
+        Intent intent = new Intent(this, StatsActivity.class);
+        startActivity(intent);
+    }
 }
