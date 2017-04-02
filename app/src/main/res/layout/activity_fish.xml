@@ -16,7 +16,8 @@
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:onClick="OnClickTakePicture"
-            android:text="Take picture" />
+            android:text="@string/take_picture" />
+
 
         <ImageView
             android:id="@+id/fish_picture"
@@ -33,6 +34,19 @@
             android:ems="10"
             android:id="@+id/fish_name"
             android:layout_marginEnd="17dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/choose_the_fish_category_name"/>
+
+        <Spinner
+            android:id="@+id/fish_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/fish_arrays"
+            android:prompt="@string/fish_prompt" />
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,7 +75,7 @@
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:onClick="addFish"
-            android:text="Confirm" />
+            android:text="@string/confirm" />
 
 
     </LinearLayout>

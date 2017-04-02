@@ -180,7 +180,28 @@
 
     <string name="title_activity_gallery">GalleryActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="fish">FISH</string>
+    <string name="stop_service">stop_service</string>
+    <string name="pause_service">pause_service</string>
+    <string name="settings">Settings</string>
+    <string name="statistiques">Statistiques</string>
+    <string name="fish_prompt">Choose a fish</string>
+    <string name="choose_the_fish_category_name">Choose the fish category name</string>
+    <string name="naTV">Type of fish: N/A. PM the contact and use NFC</string>
+    <string name="confirm">Confirm</string>
+    <string name="take_picture">Take picture</string>
 
+
+    <string-array name="fish_arrays">
+        <item>Smallmouth Bass</item>
+        <item>Largemouth Bass</item>
+        <item>Pike</item>
+        <item>Musky</item>
+        <item>Trout</item>
+        <item>Sunfish</item>
+        <item>Catfish</item>
+        <item>Shark</item>
+    </string-array>
 
 
 </resources>
