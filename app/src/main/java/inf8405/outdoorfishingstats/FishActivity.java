@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -47,7 +50,7 @@ import java.util.Date;
  * Created by Sly on 4/1/2017.
  */
 
-public class FishActivity extends AppCompatActivity{
+public class FishActivity extends AppCompatActivity implements SensorEventListener{
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private final static int MY_LOCATION_REQUEST_CODE = 1;
@@ -69,22 +72,61 @@ public class FishActivity extends AppCompatActivity{
     private Group m_group;
     //public LocationManager m_locationManager;
 
-    //private SensorManager m_SensorManager;
+    private SensorManager m_SensorManager;
+    public static Sensor m_pressureEnvSensor,m_temperatureEnvSensor,m_accelerometerEnvSensor,m_gyroEnvSensor,m_proximityEnvSensor,m_compassEnvSensor;
+
+    private static EnvSensorEntry envSensorEntry;
+    private TextView temperatureTextView;
+    private TextView pressureTextView;
+    private TextView compassTextView;
+    private TextView accelerometerTextView;
+    private TextView gyroscopeTextView ;
+    private TextView proximityTextView;
+
+    private TextView fishLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fish);
         //m_locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        //m_SensorManager =  (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         m_displayName = getDisplayNamePreference(getApplicationContext());
-
+        setupSensors();
         setupFirebase();
         m_sqLitehelper = new DatabaseHelper(this);
     }
 
     public void OnClickTakePicture(View view) {
         takePicture();
+    }
+
+    public void setupSensors(){
+        m_SensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        envSensorEntry = new EnvSensorEntry();
+        m_temperatureEnvSensor = m_SensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        m_pressureEnvSensor = m_SensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+        m_accelerometerEnvSensor = m_SensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        m_gyroEnvSensor = m_SensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        m_proximityEnvSensor = m_SensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        m_compassEnvSensor = m_SensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+        temperatureTextView = (TextView) findViewById(R.id.temperature);
+        pressureTextView = (TextView) findViewById(R.id.pressure);
+        compassTextView = (TextView) findViewById(R.id.compass);
+        accelerometerTextView = (TextView) findViewById(R.id.accelerometer);
+        gyroscopeTextView = (TextView) findViewById(R.id.gyroscope);
+        proximityTextView = (TextView) findViewById(R.id.proximity);
+
+        fishLocation = (TextView) findViewById(R.id.fish_location);
+
+        temperatureTextView.setText("Temperature: " + envSensorEntry.temperature);
+        pressureTextView.setText("Pressure: " + envSensorEntry.pressure);
+        accelerometerTextView.setText("Accelerometer: " + envSensorEntry.accelerometer);
+        gyroscopeTextView.setText("Gyroscope: " + envSensorEntry.gyroscope);
+        proximityTextView.setText("Proximity: " + envSensorEntry.proximity);
+        compassTextView.setText("Compass: " + envSensorEntry.compass);
+
+        fishLocation.setText("Lon: _"+ ", Lat: _");
     }
 
     public void takePicture(){
@@ -106,7 +148,6 @@ public class FishActivity extends AppCompatActivity{
             final TextView fishTime = (TextView) findViewById(R.id.fish_time);
             fishTime.setText(m_currentDateTime.toString());
 
-            final TextView fishLocation = (TextView) findViewById(R.id.fish_location);
 
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
@@ -292,6 +333,80 @@ public class FishActivity extends AppCompatActivity{
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float val = event.values[0];
+        int type=event.sensor.getType();
+        String typeOutput = "";
+        switch(type){
+            case Sensor.TYPE_AMBIENT_TEMPERATURE:
+                envSensorEntry.temperature = val;
+                typeOutput = Sensor.STRING_TYPE_AMBIENT_TEMPERATURE;
+                if(temperatureTextView != null)
+                    temperatureTextView.setText("Temperature: " + envSensorEntry.temperature);
+                break;
+            case Sensor.TYPE_PRESSURE:
+                envSensorEntry.pressure = val;
+                typeOutput = Sensor.STRING_TYPE_PRESSURE;
+                if(pressureTextView != null)
+                    pressureTextView.setText("Pressure: " + envSensorEntry.pressure);
+                break;
+            case Sensor.TYPE_ACCELEROMETER:
+                envSensorEntry.accelerometer = val;
+                typeOutput = Sensor.STRING_TYPE_ACCELEROMETER;
+                if(accelerometerTextView != null)
+                    accelerometerTextView.setText("Accelerometer: " + envSensorEntry.accelerometer);
+                break;
+            case Sensor.TYPE_GYROSCOPE:
+                envSensorEntry.gyroscope = val;
+                typeOutput = Sensor.STRING_TYPE_GYROSCOPE;
+                if(gyroscopeTextView != null)
+                    gyroscopeTextView.setText("Gyroscope: " +  envSensorEntry.gyroscope);
+                break;
+            case Sensor.TYPE_PROXIMITY:
+                envSensorEntry.proximity = val;
+                typeOutput = Sensor.STRING_TYPE_PROXIMITY;
+                if(proximityTextView != null)
+                    proximityTextView.setText("Proximity: " +  envSensorEntry.proximity);
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                envSensorEntry.compass = val;
+                typeOutput = Sensor.STRING_TYPE_MAGNETIC_FIELD;
+                if(compassTextView != null)
+                    compassTextView.setText("Compass: " + envSensorEntry.compass);
+                break;
+            default: break;
+        }
+        Log.d("SENSOR", typeOutput+": "+val);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerListenerSensors();
+    }
+
+    public void  registerListenerSensors(){
+        if(m_temperatureEnvSensor!=null)
+            m_SensorManager.registerListener(this, m_temperatureEnvSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if(m_pressureEnvSensor!=null)
+            m_SensorManager.registerListener(this, m_pressureEnvSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if(m_accelerometerEnvSensor!=null)
+            m_SensorManager.registerListener(this, m_accelerometerEnvSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if(m_gyroEnvSensor!=null)
+            m_SensorManager.registerListener(this, m_gyroEnvSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if(m_proximityEnvSensor!=null)
+            m_SensorManager.registerListener(this, m_proximityEnvSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if(m_compassEnvSensor!=null)
+            m_SensorManager.registerListener(this, m_compassEnvSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
 
 
 }
