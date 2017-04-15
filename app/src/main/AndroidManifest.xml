@@ -60,8 +60,25 @@
             android:name=".GalleryActivity"
             android:label="@string/title_activity_gallery"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".StatsActivity" />
         <activity android:name=".BeamActivity"></activity>
+        <activity android:name=".StatsActivity"></activity>
+
+
+        <activity
+            android:name=".BatteryActivity"
+            android:parentActivityName=".MainActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <receiver android:name=".BatteryReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_LOW" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
