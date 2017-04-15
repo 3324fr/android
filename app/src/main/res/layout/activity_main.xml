@@ -13,25 +13,25 @@
         android:weightSum="1">
 
     <Button
-        android:id="@+id/btnStartService"
+        android:id="@+id/btnSettings"
         android:layout_width="270dp"
         android:layout_height="wrap_content"
         android:onClick="OnClickSetting"
         android:text="@string/settings" />
 
     <Button
-        android:id="@+id/btnPauseService"
+        android:id="@+id/btnMap"
         android:layout_width="270dp"
         android:layout_height="wrap_content"
         android:onClick="OnClickMap"
-        android:text="@string/pause_service" />
+        android:text="@string/Map" />
 
     <Button
         android:id="@+id/btnStopService"
         android:layout_width="270dp"
         android:layout_height="wrap_content"
-        android:onClick="OnClickScrolling"
-        android:text="@string/stop_service" />
+        android:onClick="OnClickGallery"
+        android:text="@string/Gallery" />
 
     <Button
         android:id="@+id/btnFish"
@@ -46,6 +46,13 @@
         android:layout_height="wrap_content"
         android:onClick="OnClickStats"
         android:text="@string/statistiques" />
+
+    <Button
+        android:id="@+id/btnBattery"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:onClick="OnClickBattery"
+        android:text="@string/Battery" />
 
     </LinearLayout>
 

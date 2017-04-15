@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void OnClickScrolling(View view){
+    public void OnClickGallery(View view){
         Intent intent = new Intent(this, GalleryActivity.class);
         startActivity(intent);
     }
@@ -45,5 +45,10 @@ public class MainActivity extends AppCompatActivity {
     public void OnClickStats(View v){
         Intent intent = new Intent(this, StatsActivity.class);
         startActivity(intent);
+    }
+
+    public void OnClickBattery(View v){
+        Intent intentBattery = new Intent(this, BatteryActivity.class);
+        startActivity(intentBattery);
     }
 }
