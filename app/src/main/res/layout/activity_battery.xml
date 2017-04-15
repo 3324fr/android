@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/level"
-        android:textSize="36sp" />
+        android:textSize="24sp" />
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
