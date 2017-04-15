@@ -51,4 +51,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intentBattery = new Intent(this, BatteryActivity.class);
         startActivity(intentBattery);
     }
+
+    public void OnClickBeam(View v){
+        Intent intent = new Intent(this, BeamActivity.class);
+        startActivity(intent);
+    }
+
 }
