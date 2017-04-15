@@ -190,7 +190,11 @@
     <string name="naTV">Type of fish: N/A. PM the contact and use NFC</string>
     <string name="confirm">Confirm</string>
     <string name="take_picture">Take picture</string>
-
+    <string name="mode_economie_energie">Mode Economie Energie</string>
+    <string name="low_battery_icon">Low Battery Icon</string>
+    <string name="battery_low">battery low</string>
+    <string name="percent">%</string>
+    <string name="location_updateInterval_key">location_updateInterval_key</string>
 
     <string-array name="fish_arrays">
         <item>Smallmouth Bass</item>
