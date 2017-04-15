@@ -159,7 +159,7 @@ public class FishActivity extends AppCompatActivity{
             fishDTO.latitude = m_lastLocation  == null ?  0 : m_lastLocation.getLatitude();
 
             //Add fish to firebase & Picture with m_displayName
-            m_groupRef.child(fishDTO.name).setValue(fishDTO);
+            m_groupRef.child("FishList").child(fishDTO.name).setValue(fishDTO);
             m_UserPictureRef.child(fishDTO.name).putBytes(convertBitmap2Array(m_fishPicture));
             //todo SQLITE VERIFY
             SQLiteDatabase db_write = m_sqLitehelper.getWritableDatabase();
