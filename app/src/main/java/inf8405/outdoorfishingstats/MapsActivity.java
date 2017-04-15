@@ -193,6 +193,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     e.printStackTrace();
                 }
                 if(group == null){
+                    Log.d("DBDelete", "MAPS_SETUP");
                     m_groupRef.setValue(m_group);
                 } else {
                     m_group = group;
@@ -261,7 +262,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         FishDTO fish = new FishDTO();
-
+        Log.d("DBUpdate", "MAPS_ONLOCCHANGE");
         m_group.add(fish);
         m_groupRef.setValue(m_group);
         //groupRef.setValue(loc);

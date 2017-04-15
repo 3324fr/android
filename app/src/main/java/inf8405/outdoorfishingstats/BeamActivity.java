@@ -41,7 +41,7 @@ public class BeamActivity  extends AppCompatActivity  implements CreateNdefMessa
                 "Beam Time: " + System.currentTimeMillis());
         NdefMessage msg = new NdefMessage(
                 new NdefRecord[] { NdefRecord.createMime(
-                        "application/vnd.com.example.android.beam", text.getBytes())
+                        "application/vnd.com.example.android.beamGGGGGG", text.getBytes())
                         /**
                          * The Android Application Record (AAR) is commented out. When a device
                          * receives a push with an AAR in it, the application specified in the AAR
@@ -80,6 +80,6 @@ public class BeamActivity  extends AppCompatActivity  implements CreateNdefMessa
         // only one message sent during the beam
         NdefMessage msg = (NdefMessage) rawMsgs[0];
         // record 0 contains the MIME type, record 1 is the AAR, if present
-        textView.setText(new String(msg.getRecords()[0].getPayload()));
+        textView.setText(new String(msg.getRecords()[0].getPayload()) + " GGGG ");
     }
 }
