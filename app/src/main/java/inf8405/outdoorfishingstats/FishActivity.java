@@ -222,7 +222,7 @@ public class FishActivity extends AppCompatActivity{
     public void saveToSQL(SQLiteDatabase db , FishDTO fish) {
         // Create insert entries
         ContentValues values = new ContentValues();
-        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_NAME, m_displayName);
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_NAME, fish.name);
 
         values.put(SQLiteContract.FishingEntry.COLUMN_NAME_LAT, fish.latitude);
         values.put(SQLiteContract.FishingEntry.COLUMN_NAME_LNG, fish.longitude);
