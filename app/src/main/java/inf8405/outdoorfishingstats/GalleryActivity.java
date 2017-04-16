@@ -26,7 +26,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -39,6 +43,7 @@ public class GalleryActivity extends AppCompatActivity {
     private static FirebaseDatabase m_FirebaseDatabase;
     private static FirebaseStorage m_FirebaseStorage;
     private static StorageReference m_UserPictureRef;
+    private static DatabaseReference m_groupRef;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -54,7 +59,8 @@ public class GalleryActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private static ArrayList<FishEntry> m_listEntry;
+    private static ArrayList<PhotoDTO> m_listEntry;
+    static PhotoDTO entry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,14 +88,47 @@ public class GalleryActivity extends AppCompatActivity {
         });
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        m_FirebaseDatabase = FirebaseDatabase.getInstance();
+        m_groupRef = m_FirebaseDatabase.getReference("FishList");
         m_FirebaseStorage = FirebaseStorage.getInstance();
         FirebaseAuth.getInstance().signInAnonymously();
         m_FirebaseDatabase = FirebaseDatabase.getInstance();
         m_UserPictureRef = m_FirebaseStorage.getReference(pref.getString(FishActivity.PREFS_KEY, getResources().getString(R.string.pref_default_display_name)));
+        m_listEntry = new ArrayList<>();
+        m_groupRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    try{
+                        final PhotoDTO dto = postSnapshot.getValue(PhotoDTO.class);
+                        entry = dto;
+                        m_UserPictureRef.child(entry.pictureName).getBytes(Long.MAX_VALUE)
+                                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                    @Override
+                                    public void onSuccess(byte[] bytes) {
+                                        // Use the bytes to display the image
+                                        entry.bitmap = BitmapFactory
+                                                .decodeByteArray(bytes, 0, bytes.length);
 
-        if(m_listEntry == null)
-            m_listEntry = Singleton.getInstance(getApplicationContext()).getFish();
-        Toast.makeText(getApplicationContext(), String.valueOf(m_listEntry.size()), Toast.LENGTH_SHORT).show();
+
+                                    }
+                                });
+                        if(entry.bitmap != null)
+                            m_listEntry.add(entry);
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                System.out.println("The getAllUsername read failed: " + databaseError.getCode());
+            }
+        });
+
+
     }
 
 
@@ -147,7 +186,7 @@ public class GalleryActivity extends AppCompatActivity {
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             //picture(m_listEntry.get(getArguments().getInt(ARG_SECTION_NUMBER)),rootView);
-            textView.setText(m_listEntry.get(getArguments().getInt(ARG_SECTION_NUMBER)).name);
+            textView.setText( m_listEntry.get(getArguments().getInt(ARG_SECTION_NUMBER)).pictureName);
             return rootView;
         }
     }
@@ -190,8 +229,6 @@ public class GalleryActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            if(m_listEntry == null)
-                m_listEntry = Singleton.getInstance(getApplicationContext()).getFish();
 
             return m_listEntry.size();
         }
