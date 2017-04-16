@@ -54,7 +54,7 @@ public class FishActivity extends AppCompatActivity{
     public static final String PREFS_NAME = "pref_general";
     public static final String PREFS_KEY = "displayName";
 
-    public String m_displayName;
+    public static String m_displayName;
 
     public FishDTO m_fishDTO;
     public Location m_lastLocation;

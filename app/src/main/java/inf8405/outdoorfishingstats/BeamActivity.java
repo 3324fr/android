@@ -1,5 +1,8 @@
 package inf8405.outdoorfishingstats;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -18,6 +21,7 @@ public class BeamActivity  extends AppCompatActivity  implements CreateNdefMessa
 
     NfcAdapter mNfcAdapter;
     TextView textView;
+    public static final String PREFS_KEY = "displayName";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,9 +43,10 @@ public class BeamActivity  extends AppCompatActivity  implements CreateNdefMessa
     public NdefMessage createNdefMessage(NfcEvent event) {
         String text = ("Beam me up, Android!\n\n" +
                 "Beam Time: " + System.currentTimeMillis());
+        String userName = FishActivity.m_displayName == null ? getDisplayNamePreference(getApplicationContext()) : FishActivity.m_displayName;
         NdefMessage msg = new NdefMessage(
                 new NdefRecord[] { NdefRecord.createMime(
-                        "application/vnd.com.example.android.beamGGGGGG", text.getBytes())
+                        "GGGGGGGGGGGg" + FishActivity.m_displayName, text.getBytes())
                         /**
                          * The Android Application Record (AAR) is commented out. When a device
                          * receives a push with an AAR in it, the application specified in the AAR
@@ -80,6 +85,12 @@ public class BeamActivity  extends AppCompatActivity  implements CreateNdefMessa
         // only one message sent during the beam
         NdefMessage msg = (NdefMessage) rawMsgs[0];
         // record 0 contains the MIME type, record 1 is the AAR, if present
-        textView.setText(new String(msg.getRecords()[0].getPayload()) + " GGGG ");
+        textView.setText(new String(msg.getRecords()[0].getPayload()));
+    }
+
+
+    private String getDisplayNamePreference(Context context){
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        return pref.getString(PREFS_KEY, getResources().getString(R.string.pref_default_display_name));
     }
 }

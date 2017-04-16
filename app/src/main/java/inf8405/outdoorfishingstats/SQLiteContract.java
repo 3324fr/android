@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import java.util.ArrayList;
+
 /**
  * Created by fred on 4/1/17.
  */
@@ -13,6 +15,7 @@ public final class SQLiteContract {
     // To prevent someone from accidentally instantiating the contract class,
     // make the constructor private.
     private SQLiteContract() {}
+
 
     /* Inner class that defines the table contents */
     public static class FishingEntry implements BaseColumns {

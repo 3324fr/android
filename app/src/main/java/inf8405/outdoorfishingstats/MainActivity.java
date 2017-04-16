@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private int level;
     private float percent;
     private int scale;
+    public static ArrayList<String> listeAmis = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
