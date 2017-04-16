@@ -1,5 +1,9 @@
 package inf8405.outdoorfishingstats;
 
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,9 +20,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity {
+
+
+    private static FirebaseDatabase m_FirebaseDatabase;
+    private static FirebaseStorage m_FirebaseStorage;
+    private static StorageReference m_UserPictureRef;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -34,6 +54,7 @@ public class GalleryActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private static ArrayList<FishEntry> m_listEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +81,15 @@ public class GalleryActivity extends AppCompatActivity {
             }
         });
 
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        m_FirebaseStorage = FirebaseStorage.getInstance();
+        FirebaseAuth.getInstance().signInAnonymously();
+        m_FirebaseDatabase = FirebaseDatabase.getInstance();
+        m_UserPictureRef = m_FirebaseStorage.getReference(pref.getString(FishActivity.PREFS_KEY, getResources().getString(R.string.pref_default_display_name)));
+
+        if(m_listEntry == null)
+            m_listEntry = Singleton.getInstance(getApplicationContext()).getFish();
+        Toast.makeText(getApplicationContext(), String.valueOf(m_listEntry.size()), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -115,10 +145,30 @@ public class GalleryActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_gallery, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            //picture(m_listEntry.get(getArguments().getInt(ARG_SECTION_NUMBER)),rootView);
+            textView.setText(m_listEntry.get(getArguments().getInt(ARG_SECTION_NUMBER)).name);
             return rootView;
         }
     }
+//     Bitmap m_bitmap;
+//    private   void picture(FishEntry fish, View rootView) {//Display picture
+//
+//        m_UserPictureRef.child(fish.name).getBytes(Long.MAX_VALUE)
+//                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//                    @Override
+//                    public void onSuccess(byte[] bytes) {
+//                        // Use the bytes to display the image
+//                        m_bitmap = BitmapFactory
+//                                .decodeByteArray(bytes, 0, bytes.length);
+//
+//
+//                    }
+//                });
+//        ImageView mImageView = (ImageView) rootView.findViewById(R.id.imageGallery);
+//        mImageView.setImageBitmap(m_bitmap);
+//
+//    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -140,20 +190,17 @@ public class GalleryActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            if(m_listEntry == null)
+                m_listEntry = Singleton.getInstance(getApplicationContext()).getFish();
+
+            return m_listEntry.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
+            return "SECTION 1";
+            //return null;
         }
+
     }
 }

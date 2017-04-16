@@ -33,26 +33,11 @@ class Singleton {
         m_sqLitehelper = new DatabaseHelper(context.getApplicationContext());
     }
 
-    public void addFish(FishEntry fish){
 
-        SQLiteDatabase db = m_sqLitehelper.getWritableDatabase();
-        // Create insert entries
-        ContentValues values = new ContentValues();
-        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_COMMENT, fish.comment);
-        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_LAT, fish.latitude);
-        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_LNG, fish.longitude);
-        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_MAG, fish.fieldStrength);
-        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_NAME, fish.name);
-        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_PRESSURE, fish.pressure);
-        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_TEMPERATURE, fish.temperature);
-        db.insert(SQLiteContract.FishingEntry.TABLE_NAME, null, values);
-        db.close();
-    }
-
-    public List<FishEntry> getFish(){
-        SQLiteDatabase db = m_sqLitehelper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select SELECT DISTINCT * from " + SQLiteContract.FishingEntry.TABLE_NAME,null);
-        List<FishEntry>items = new ArrayList<>();
+    public ArrayList<FishEntry> getFish(){
+        SQLiteDatabase db = m_sqLitehelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT DISTINCT * FROM " + SQLiteContract.FishingEntry.TABLE_NAME,null);
+        ArrayList<FishEntry>items = new ArrayList<>();
         if (cursor .moveToFirst()) {
             while (cursor.isAfterLast() == false) {
                 FishEntry fish = new FishEntry();
