@@ -6,12 +6,11 @@
     android:layout_height="match_parent"
     tools:context="inf8405.outdoorfishingstats.BeamActivity">
 
-    <EditText
+    <TextView
         android:id="@+id/textnfc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textMultiLine"
         tools:layout_editor_absoluteX="45dp"
         tools:layout_editor_absoluteY="63dp" />
 </android.support.constraint.ConstraintLayout>

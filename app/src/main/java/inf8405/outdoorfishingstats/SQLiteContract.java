@@ -28,10 +28,10 @@ public final class SQLiteContract {
         public static final String COLUMN_NAME_LAT = "lattitude";
         public static final String COLUMN_NAME_LNG = "longitude";
         public static final String COLUMN_NAME_TIME = "time";
+        public static final String COLUMN_NAME_ACCELEROMETER = "accelerometer";
+        public static final String COLUMN_NAME_GYROSCOPE = "gyroscope";
+        public static final String COLUMN_NAME_PROXIMITY = "proximity";
     }
-
-
-
 
     public static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + FishingEntry.TABLE_NAME + " (" +
@@ -40,10 +40,13 @@ public final class SQLiteContract {
                     FishingEntry.COLUMN_NAME_NAME + " TEXT," +
                     FishingEntry.COLUMN_NAME_MAG + " TEXT," +
                     FishingEntry.COLUMN_NAME_TIME + " TEXT," +
-                    FishingEntry.COLUMN_NAME_TEMPERATURE + " INTEGER NOT NULL," +
-                    FishingEntry.COLUMN_NAME_PRESSURE + " INTEGER NOT NULL," +
+                    FishingEntry.COLUMN_NAME_TEMPERATURE + " REAL," +
+                    FishingEntry.COLUMN_NAME_PRESSURE + " REAL," +
                     FishingEntry.COLUMN_NAME_LAT + " REAL NOT NULL," +
-                    FishingEntry.COLUMN_NAME_LNG + " REAL NOT NULL) ";
+                    FishingEntry.COLUMN_NAME_LNG + " REAL NOT NULL," +
+                    FishingEntry.COLUMN_NAME_ACCELEROMETER + " REAL," +
+                    FishingEntry.COLUMN_NAME_GYROSCOPE + " REAL," +
+                    FishingEntry.COLUMN_NAME_PROXIMITY + " REAL) ";
 
 
 

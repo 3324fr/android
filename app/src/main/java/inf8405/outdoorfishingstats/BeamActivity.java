@@ -43,6 +43,7 @@ public class BeamActivity  extends AppCompatActivity  implements CreateNdefMessa
     public NdefMessage createNdefMessage(NfcEvent event) {
         String text = ("Beam me up, Android!\n\n" +
                 "Beam Time: " + System.currentTimeMillis());
+        Toast.makeText(this,"Username " + getDisplayNamePreference(getApplicationContext()) , Toast.LENGTH_SHORT).show();
         String userName = FishActivity.m_displayName == null ? getDisplayNamePreference(getApplicationContext()) : FishActivity.m_displayName;
         NdefMessage msg = new NdefMessage(
                 new NdefRecord[] { NdefRecord.createMime(
@@ -79,13 +80,17 @@ public class BeamActivity  extends AppCompatActivity  implements CreateNdefMessa
      * Parses the NDEF Message from the intent and prints to the TextView
      */
     void processIntent(Intent intent) {
+
         textView = (TextView) findViewById(R.id.textnfc);
         Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
                 NfcAdapter.EXTRA_NDEF_MESSAGES);
         // only one message sent during the beam
         NdefMessage msg = (NdefMessage) rawMsgs[0];
         // record 0 contains the MIME type, record 1 is the AAR, if present
-        textView.setText(new String(msg.getRecords()[0].getPayload()));
+        String msgInput = new String(msg.getRecords()[0].getPayload());
+        textView.setText(" TV " + msgInput);
+        MainActivity.listeAmis.add(msgInput);
+        Toast.makeText(this, "Msg is :" + msgInput, Toast.LENGTH_SHORT).show();
     }
 
 

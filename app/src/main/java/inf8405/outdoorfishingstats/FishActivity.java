@@ -270,12 +270,12 @@ public class FishActivity extends AppCompatActivity implements SensorEventListen
         values.put(SQLiteContract.FishingEntry.COLUMN_NAME_TIME, fish.time);
         values.put(SQLiteContract.FishingEntry.COLUMN_NAME_COMMENT, fish.contact);
 
-        // TODO GET TEMPERATURE AND PRESSURE AND MAG FIELD
-        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_TEMPERATURE, 0);
-        // TODO GET TEMPERATURE AND PRESSURE AND MAG FIELD
-        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_PRESSURE, 0);
-        // TODO GET TEMPERATURE AND PRESSURE AND MAG FIELD
-        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_MAG, 0);
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_TEMPERATURE, envSensorEntry.temperature);
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_MAG, envSensorEntry.compass);
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_PRESSURE, envSensorEntry.pressure);
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_ACCELEROMETER, envSensorEntry.accelerometer);
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_GYROSCOPE, envSensorEntry.gyroscope);
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_PROXIMITY, envSensorEntry.proximity);
 
         //values.put(SQLiteContract.FishingEntry.COLUMN_NAME_PICTURE, bytesPicture);
         db.insert(SQLiteContract.FishingEntry.TABLE_NAME, null, values);
@@ -380,7 +380,7 @@ public class FishActivity extends AppCompatActivity implements SensorEventListen
                 break;
             default: break;
         }
-        Log.d("SENSOR", typeOutput+": "+val);
+        //Log.d("SENSOR", typeOutput+": "+val);
     }
 
     @Override
