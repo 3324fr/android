@@ -106,7 +106,7 @@ public class BeamActivity  extends AppCompatActivity  implements CreateNdefMessa
             msgBuilder = "erreur";
         }
         // record 0 contains the MIME type, record 1 is the AAR, if present
-        MainActivity.listeAmis.add(msgBuilder);
+        Singleton.listeAmis.add(msgBuilder);
 
         textView.setText(msgBuilder);
     }

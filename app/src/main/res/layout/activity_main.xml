@@ -41,13 +41,6 @@
         android:text="@string/fish" />
 
     <Button
-        android:id="@+id/btnStats"
-        android:layout_width="270dp"
-        android:layout_height="wrap_content"
-        android:onClick="OnClickStats"
-        android:text="@string/statistiques" />
-
-    <Button
         android:id="@+id/btnBattery"
         android:layout_width="270dp"
         android:layout_height="wrap_content"
@@ -59,7 +52,7 @@
         android:layout_width="270dp"
         android:layout_height="wrap_content"
         android:onClick="OnClickBeam"
-        android:text="NFC BEAM" />
+        android:text="@string/nfc_beam" />
 
     </LinearLayout>
 

@@ -199,6 +199,7 @@
     <string name="Gallery">Gallery</string>
     <string name="Battery">Battery</string>
     <string name="fishPictureContentDescription">Fish</string>
+    <string name="nfc_beam">NFC BEAM</string>
 
     <string-array name="fish_arrays">
         <item>Smallmouth Bass</item>

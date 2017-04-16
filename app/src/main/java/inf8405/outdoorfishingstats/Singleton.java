@@ -17,7 +17,7 @@ import static android.R.id.list;
 class Singleton {
 
     private static Singleton ourInstance;
-
+    public static ArrayList<String> listeAmis = new ArrayList<>();
 
     private static DatabaseHelper m_sqLitehelper;
 

@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private int level;
     private float percent;
     private int scale;
-    public static ArrayList<String> listeAmis = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void OnClickStats(View v){
-        Intent intent = new Intent(this, StatsActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, StatsActivity.class);
+        //startActivity(intent);
     }
 
     public void OnClickBattery(View v){

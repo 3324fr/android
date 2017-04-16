@@ -28,6 +28,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
+            android:screenOrientation="portrait"
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,16 +50,20 @@
 
         <activity
             android:name=".MapsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".SettingsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".FishActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_Fish"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".GalleryActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_gallery"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".BeamActivity">
@@ -85,6 +90,7 @@
 
         <activity
             android:name=".BatteryActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
