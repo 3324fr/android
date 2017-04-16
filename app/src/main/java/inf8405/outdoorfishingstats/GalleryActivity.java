@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -73,9 +75,6 @@ public class GalleryActivity extends AppCompatActivity {
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -89,10 +88,9 @@ public class GalleryActivity extends AppCompatActivity {
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         m_FirebaseDatabase = FirebaseDatabase.getInstance();
-        m_groupRef = m_FirebaseDatabase.getReference("FishList");
+        m_groupRef = m_FirebaseDatabase.getReference("FishList").child(FishActivity.PHOTO_REF);
         m_FirebaseStorage = FirebaseStorage.getInstance();
         FirebaseAuth.getInstance().signInAnonymously();
-        m_FirebaseDatabase = FirebaseDatabase.getInstance();
         m_UserPictureRef = m_FirebaseStorage.getReference(pref.getString(FishActivity.PREFS_KEY, getResources().getString(R.string.pref_default_display_name)));
         m_listEntry = new ArrayList<>();
         m_groupRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -101,6 +99,9 @@ public class GalleryActivity extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     try{
                         final PhotoDTO dto = postSnapshot.getValue(PhotoDTO.class);
+                        if(dto == null){
+                            Log.d("dto Null", "null dto photo");
+                        }
                         entry = dto;
                         m_UserPictureRef.child(entry.pictureName).getBytes(Long.MAX_VALUE)
                                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -113,13 +114,21 @@ public class GalleryActivity extends AppCompatActivity {
 
                                     }
                                 });
-                        if(entry.bitmap != null)
+                        if(entry.bitmap != null){
                             m_listEntry.add(entry);
+                            Toast.makeText(getApplicationContext(), "FOUND", Toast.LENGTH_SHORT).show();
+                            //textView.setText("yo");
+                        } else {
+                            Toast.makeText(getApplicationContext(), "ERREUR BITMAP", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                     catch(Exception e){
                         e.printStackTrace();
                     }
+                    Toast.makeText(getApplicationContext(), "DANS DE BOUCLE", Toast.LENGTH_SHORT).show();
                 }
+                Toast.makeText(getApplicationContext(), "FIN DE BOUCLE", Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -128,6 +137,11 @@ public class GalleryActivity extends AppCompatActivity {
             }
         });
 
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        //TextView textView = (TextView) findViewById(R.id.section_label);
+        //textView.setText( "TEST BOFRE");
 
     }
 
@@ -187,6 +201,7 @@ public class GalleryActivity extends AppCompatActivity {
             //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             //picture(m_listEntry.get(getArguments().getInt(ARG_SECTION_NUMBER)),rootView);
             textView.setText( m_listEntry.get(getArguments().getInt(ARG_SECTION_NUMBER)).pictureName);
+
             return rootView;
         }
     }
