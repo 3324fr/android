@@ -9,22 +9,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="1">
+        android:weightSum="100">
 
         <Button
             android:id="@+id/btnTakePicture"
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:onClick="OnClickTakePicture"
-            android:text="@string/take_picture" />
+            android:text="@string/take_picture"
+            android:layout_weight="5"/>
 
 
         <ImageView
             android:id="@+id/fish_picture"
-            android:layout_width="202dp"
-            android:layout_height="240dp"
+            android:layout_width="133dp"
+            android:layout_height="143dp"
             android:contentDescription="@string/fish_picture"
-            app:srcCompat="@drawable/fish" />
+            app:srcCompat="@drawable/fish"
+            android:layout_weight="15"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -33,12 +35,14 @@
             android:hint="@string/name"
             android:ems="10"
             android:id="@+id/fish_name"
-            android:layout_marginEnd="17dp" />
+            android:layout_marginEnd="17dp"
+            android:layout_weight="5"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/choose_the_fish_category_name"/>
+            android:text="@string/choose_the_fish_category_name"
+            android:layout_weight="5"/>
 
         <Spinner
             android:id="@+id/fish_category"
@@ -54,64 +58,66 @@
             android:hint="@string/contact"
             android:ems="10"
             android:id="@+id/fish_contact"
-            android:layout_marginEnd="17dp" />
+            android:layout_marginEnd="17dp"
+            android:layout_weight="5"/>
 
         <TextView
             android:id="@+id/fish_time"
             android:layout_width="369dp"
             android:layout_height="wrap_content"
             android:text=""
-            android:layout_weight="0.17" />
+            android:layout_weight="5" />
 
         <TextView
             android:id="@+id/fish_location"
             android:layout_width="369dp"
             android:layout_height="wrap_content"
             android:text=""
-            android:layout_weight="0.17" />
+            android:layout_weight="5" />
         <TextView
             android:id="@+id/temperature"
             android:layout_width="369dp"
             android:layout_height="wrap_content"
             android:text=""
-            android:layout_weight="0.17" />
+            android:layout_weight="5" />
         <TextView
             android:id="@+id/pressure"
             android:layout_width="369dp"
             android:layout_height="wrap_content"
             android:text=""
-            android:layout_weight="0.17" />
+            android:layout_weight="5" />
         <TextView
             android:id="@+id/compass"
             android:layout_width="369dp"
             android:layout_height="wrap_content"
             android:text=""
-            android:layout_weight="0.17" />
+            android:layout_weight="5" />
         <TextView
             android:id="@+id/accelerometer"
             android:layout_width="369dp"
             android:layout_height="wrap_content"
             android:text=""
-            android:layout_weight="0.17" />
+            android:layout_weight="5" />
         <TextView
             android:id="@+id/gyroscope"
             android:layout_width="369dp"
             android:layout_height="wrap_content"
             android:text=""
-            android:layout_weight="0.17" />
+            android:layout_weight="5" />
         <TextView
             android:id="@+id/proximity"
             android:layout_width="369dp"
             android:layout_height="wrap_content"
             android:text=""
-            android:layout_weight="0.17" />
+            android:layout_weight="5" />
 
         <Button
             android:id="@+id/btnConfirm"
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:onClick="addFish"
-            android:text="@string/confirm" />
+            android:text="@string/confirm"
+            android:layout_weight="5"/>
 
 
     </LinearLayout>
