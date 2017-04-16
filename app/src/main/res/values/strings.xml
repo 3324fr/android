@@ -198,6 +198,7 @@
     <string name="OnClickGallery">OnClickGallery</string>
     <string name="Gallery">Gallery</string>
     <string name="Battery">Battery</string>
+    <string name="fishPictureContentDescription">Fish</string>
 
     <string-array name="fish_arrays">
         <item>Smallmouth Bass</item>

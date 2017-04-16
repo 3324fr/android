@@ -69,6 +69,42 @@
             android:layout_height="wrap_content"
             android:text=""
             android:layout_weight="0.17" />
+        <TextView
+            android:id="@+id/temperature"
+            android:layout_width="369dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_weight="0.17" />
+        <TextView
+            android:id="@+id/pressure"
+            android:layout_width="369dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_weight="0.17" />
+        <TextView
+            android:id="@+id/compass"
+            android:layout_width="369dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_weight="0.17" />
+        <TextView
+            android:id="@+id/accelerometer"
+            android:layout_width="369dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_weight="0.17" />
+        <TextView
+            android:id="@+id/gyroscope"
+            android:layout_width="369dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_weight="0.17" />
+        <TextView
+            android:id="@+id/proximity"
+            android:layout_width="369dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_weight="0.17" />
 
         <Button
             android:id="@+id/btnConfirm"
