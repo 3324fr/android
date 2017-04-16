@@ -56,6 +56,7 @@ public class FishActivity extends AppCompatActivity implements SensorEventListen
     private final static int MY_LOCATION_REQUEST_CODE = 1;
     public static final String PREFS_NAME = "pref_general";
     public static final String PREFS_KEY = "displayName";
+    public static final String PHOTO_REF = "photo_pictures";
 
     public String m_displayName;
 
@@ -184,7 +185,10 @@ public class FishActivity extends AppCompatActivity implements SensorEventListen
 
         else{
             FishDTO fishDTO = new FishDTO();
+            PhotoDTO photoDTO = new PhotoDTO();
             fishDTO.name = nameText;
+            photoDTO.file = m_displayName;
+            photoDTO.pictureName = fishDTO.name;
             fishDTO.fish = spinnerName.toString();
 
             EditText editText_contact = ((EditText) findViewById(R.id.fish_name));
@@ -202,6 +206,7 @@ public class FishActivity extends AppCompatActivity implements SensorEventListen
             //Add fish to firebase & Picture with m_displayName
             Log.d("DBUpdate", "FISH_NEWFISH");
             m_groupRef.child("FishList").child(fishDTO.name).setValue(fishDTO);
+            m_groupRef.child(PHOTO_REF).child(photoDTO.pictureName).setValue(photoDTO);
             m_UserPictureRef.child(fishDTO.name).putBytes(convertBitmap2Array(m_fishPicture));
             //todo SQLITE VERIFY
             SQLiteDatabase db_write = m_sqLitehelper.getWritableDatabase();
@@ -263,7 +268,7 @@ public class FishActivity extends AppCompatActivity implements SensorEventListen
     public void saveToSQL(SQLiteDatabase db , FishDTO fish) {
         // Create insert entries
         ContentValues values = new ContentValues();
-        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_NAME, fish.name);
+        values.put(SQLiteContract.FishingEntry.COLUMN_NAME_NAME, m_displayName);
 
         values.put(SQLiteContract.FishingEntry.COLUMN_NAME_LAT, fish.latitude);
         values.put(SQLiteContract.FishingEntry.COLUMN_NAME_LNG, fish.longitude);
