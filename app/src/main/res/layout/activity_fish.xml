@@ -65,7 +65,7 @@
             android:id="@+id/fish_time"
             android:layout_width="369dp"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="da"
             android:layout_weight="5" />
 
         <TextView

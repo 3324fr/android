@@ -146,20 +146,21 @@ public class FishActivity extends AppCompatActivity implements SensorEventListen
 
             m_currentDateTime  = new Date(System.currentTimeMillis());
 
-            final TextView fishTime = (TextView) findViewById(R.id.fish_time);
-            fishTime.setText(m_currentDateTime.toString());
 
-
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                // Acquire a reference to the system Location Manager
-                LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-                m_lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                fishLocation.setText("Lon: "+m_lastLocation.getLongitude() + ", Lat: " + m_lastLocation.getLatitude());
-            }
 
             //SensorData sensorData = new SensorData(m_SensorManager ,this);
             picture(m_fishPicture);
+        }
+        final TextView fishTime = (TextView) findViewById(R.id.fish_time);
+        fishTime.setText(m_currentDateTime.toString());
+
+
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            // Acquire a reference to the system Location Manager
+            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+            m_lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            fishLocation.setText("Lon: "+m_lastLocation.getLongitude() + ", Lat: " + m_lastLocation.getLatitude());
         }
     }//onActivityResult
 
